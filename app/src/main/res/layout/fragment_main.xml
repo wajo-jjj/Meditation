@@ -8,14 +8,14 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.meditation.MainViewModel" />
+            type="com.example.meditation.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/meditation_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="MainFragment">
+        tools:context=".view.main.MainFragment">
 
         <LinearLayout
             android:id="@+id/linearLayoutIcon"

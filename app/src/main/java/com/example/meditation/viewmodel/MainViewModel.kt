@@ -1,11 +1,10 @@
-package com.example.meditation
+package com.example.meditation.viewmodel
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.meditation.model.UserSettings
+import com.example.meditation.model.UserSettingsRepository
+import com.example.meditation.util.PlayStatus
 
 class MainViewModel: ViewModel() {
 
@@ -27,7 +26,8 @@ class MainViewModel: ViewModel() {
 
     var playStatus = MutableLiveData<Int>()
 
-    private val userSettingsRepository = UserSettingsRepository()
+    private val userSettingsRepository =
+        UserSettingsRepository()
     private lateinit var userSettings: UserSettings
 
     fun initParameters() {

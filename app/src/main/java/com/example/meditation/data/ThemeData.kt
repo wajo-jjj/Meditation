@@ -1,4 +1,4 @@
-package com.example.meditation
+package com.example.meditation.data
 
 data class ThemeData (
     val themeId: Int,

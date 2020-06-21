@@ -1,4 +1,4 @@
-package com.example.meditation
+package com.example.meditation.model
 
 data class UserSettings(
     var levelId: Int,

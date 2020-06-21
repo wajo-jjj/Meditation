@@ -1,4 +1,4 @@
-package com.example.meditation
+package com.example.meditation.view.main
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.meditation.viewmodel.MainViewModel
+import com.example.meditation.R
 import com.example.meditation.databinding.FragmentMainBinding
+import com.example.meditation.util.PlayStatus
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -31,7 +33,8 @@ class MainFragment : Fragment() {
     ): View? {
 
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_main,container,false)
         val view = binding.root
         return view
         //return inflater.inflate(R.layout.fragment_main, container, false)
