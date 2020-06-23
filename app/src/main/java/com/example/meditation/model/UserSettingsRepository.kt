@@ -3,6 +3,7 @@ package com.example.meditation.model
 import android.content.Context
 import com.example.meditation.MyApplication
 import com.example.meditation.R
+import com.example.meditation.data.ThemeData
 import com.example.meditation.util.LevelId
 
 class UserSettingsRepository {
@@ -61,6 +62,13 @@ class UserSettingsRepository {
         editor.putInt(UserSettingsPrefKey.TIME.name, selectedTime).commit()
         return loadUserSettings().time
 
+    }
+
+    fun setTheme(themeData: ThemeData) {
+        editor.putInt(UserSettingsPrefKey.THEME_ID.name, themeData.themeId).commit()
+        editor.putInt(UserSettingsPrefKey.THEME_NAME_STR_ID.name, themeData.themeNameResId).commit()
+        editor.putInt(UserSettingsPrefKey.THEME_RES_ID.name, themeData.themeSqPicResId).commit()
+        editor.putInt(UserSettingsPrefKey.THEME_SOUND_ID.name, themeData.themeSoundId).commit()
     }
 
 }
