@@ -47,4 +47,20 @@ class UserSettingsRepository {
 
     }
 
+    fun setTime(selectedItemId: Int): Int {
+        val selectedTime: Int = when(selectedItemId) {
+            0 -> 5
+            1 -> 10
+            2 -> 15
+            3 -> 20
+            4 -> 30
+            5 -> 45
+            6 -> 60
+            else -> 30
+        }
+        editor.putInt(UserSettingsPrefKey.TIME.name, selectedTime).commit()
+        return loadUserSettings().time
+
+    }
+
 }

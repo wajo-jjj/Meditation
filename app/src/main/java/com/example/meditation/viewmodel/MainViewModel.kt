@@ -6,6 +6,9 @@ import com.example.meditation.model.UserSettings
 import com.example.meditation.model.UserSettingsRepository
 import com.example.meditation.util.PlayStatus
 
+
+//データの取得(やりとり)をする場所
+
 class MainViewModel: ViewModel() {
 
     //画面真ん中上の小さい文字
@@ -53,6 +56,12 @@ class MainViewModel: ViewModel() {
 
     fun setLevel(selectedItemId: Int) {
        txtLevel.value = userSettingsRepository.setLevel(selectedItemId)
+    }
+
+    fun setTime(selectedItemId: Int) {
+        remainedTimeSeconds.value = userSettingsRepository.setTime(selectedItemId) * 60
+        displayTimeSeconds.value = changeTimeFormat(remainedTimeSeconds.value!!)
+
     }
 
 
