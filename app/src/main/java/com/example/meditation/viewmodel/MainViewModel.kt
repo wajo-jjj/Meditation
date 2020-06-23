@@ -26,8 +26,7 @@ class MainViewModel: ViewModel() {
 
     var playStatus = MutableLiveData<Int>()
 
-    private val userSettingsRepository =
-        UserSettingsRepository()
+    private val userSettingsRepository = UserSettingsRepository()
     private lateinit var userSettings: UserSettings
 
     fun initParameters() {
@@ -50,6 +49,10 @@ class MainViewModel: ViewModel() {
         val seconds = timeSeconds - (minutes * 60)
         val secondsString = if (seconds < 10) "0" + seconds.toString() else seconds.toString()
         return minutesString + " : " + secondsString
+    }
+
+    fun setLevel(selectedItemId: Int) {
+       txtLevel.value = userSettingsRepository.setLevel(selectedItemId)
     }
 
 

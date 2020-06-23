@@ -31,10 +31,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.item_select_theme -> {
+
                     true
 
                 }
                 R.id.item_select_time -> {
+
                     true
 
                 }

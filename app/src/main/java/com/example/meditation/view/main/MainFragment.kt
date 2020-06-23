@@ -55,11 +55,11 @@ class MainFragment : Fragment() {
 
     @SuppressLint("FragmentLiveDataObserve")
     private fun observeViewModel() {
-//        viewModel.txtLevel.observe(this, Observer { levelTxt -> txtLevel.text = levelTxt })
-//        viewModel.txtTheme.observe(this, Observer { themeTxt -> txtTheme.text = themeTxt})
-//        viewModel.displayTimeSeconds.observe( this, Observer { displayTime -> txtTime.text = displayTime } )
-//        viewModel.msgUpperSmall.observe(this, Observer { upperTxt -> txtMsgUpperSmall.text = upperTxt })
-//        viewModel.msgLowerLarge.observe(this, Observer { lowerTxt -> txtMsgLowerLarge.text = lowerTxt })
+        viewModel.txtLevel.observe(this, Observer { levelTxt -> txtLevel.text = levelTxt })
+        viewModel.txtTheme.observe(this, Observer { themeTxt -> txtTheme.text = themeTxt})
+        viewModel.displayTimeSeconds.observe( this, Observer { displayTime -> txtTime.text = displayTime } )
+        viewModel.msgUpperSmall.observe(this, Observer { upperTxt -> txtMsgUpperSmall.text = upperTxt })
+        viewModel.msgLowerLarge.observe(this, Observer { lowerTxt -> txtMsgLowerLarge.text = lowerTxt })
         viewModel.playStatus.observe(this, Observer { status ->
             when (status) {
                 PlayStatus.BEFORE_START -> btnPlay.setBackgroundResource(R.drawable.button_play)
