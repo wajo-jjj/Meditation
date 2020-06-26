@@ -1,8 +1,6 @@
 package com.example.meditation.viewmodel
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.meditation.MyApplication
@@ -42,6 +40,8 @@ import kotlin.concurrent.schedule
     private lateinit var userSettings: UserSettings
     private val appContext: Context = MyApplication.appContext
 
+    private var timerMeditation: Timer? = null
+
     //呼吸間隔
                 //吸う時間
     private val inhaleInterval = 4
@@ -51,6 +51,7 @@ import kotlin.concurrent.schedule
     private var exhaleInterval = 0
                 //合計時間
     private var totalInterval = 0
+
 
 
 
@@ -132,10 +133,48 @@ import kotlin.concurrent.schedule
 
         msgUpperSmall.value = appContext.getString(R.string.inhale)
         msgLowerLarge.value = inhaleInterval.toString()
+        clockMeditation()
 
     }
 
+    private fun clockMeditation() {
+        var timeElapsed = 0
 
+        timerMeditation = Timer()
+        timerMeditation?.schedule(1000,1000){
+            val tempTime = remainedTimeSeconds.value!! - 1
+            remainedTimeSeconds.postValue(tempTime)
+            displayTimeSeconds.postValue(changeTimeFormat(tempTime))
+            if (remainedTimeSeconds.value!! <= 1) {
+                msgUpperSmall.postValue("")
+                msgLowerLarge.postValue(appContext.resources.getString(R.string.meiso_finish))
+                playStatus.postValue(PlayStatus.END)
+                cancelTimer()
+                return@schedule
+            }
+                timeElapsed = if(timeElapsed >= totalInterval - 1) 0 else timeElapsed + 1
+                setDisplayText(timeElapsed)
+            }
+        }
+
+
+    private fun setDisplayText(timeElapsed: Int) {
+        if (timeElapsed >= 0 && timeElapsed < inhaleInterval) {
+            msgUpperSmall.postValue(appContext.resources.getString(R.string.inhale))
+            msgLowerLarge.postValue((inhaleInterval - timeElapsed).toString())
+        } else if (timeElapsed < inhaleInterval + holdInterval) {
+            msgUpperSmall.postValue(appContext.resources.getString(R.string.hold))
+            msgLowerLarge.postValue((inhaleInterval + holdInterval - timeElapsed).toString())
+        } else {
+            msgUpperSmall.postValue(appContext.resources.getString(R.string.exhale))
+            msgLowerLarge.postValue((totalInterval - timeElapsed).toString())
+        }
+    }
+
+
+    private fun cancelTimer() {
+        timerMeditation?.cancel()
+    }
 
     private fun adjustRemainedTime(remainedTime: Int?, totalInterval: Int): Int? {
         val remainder = remainedTime!! % totalInterval
@@ -168,6 +207,21 @@ import kotlin.concurrent.schedule
         }
     }
 
+    fun pauseMeditation() {
+        cancelTimer()
 
+    }
 
+    fun finishMeditation(){
+        cancelTimer()
+        playStatus.value = PlayStatus.BEFORE_START
+        remainedTimeSeconds.value = userSettingsRepository.loadUserSettings().time * 60
+        displayTimeSeconds.value = changeTimeFormat(remainedTimeSeconds.value!!)
+        msgUpperSmall.value = ""
+        msgLowerLarge.value = appContext.resources.getString(R.string.meiso_finish)
+    }
+
+    override fun onCleared() {
+        cancelTimer()
+    }
 }

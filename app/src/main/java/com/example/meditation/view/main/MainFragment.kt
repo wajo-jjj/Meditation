@@ -78,10 +78,10 @@ class MainFragment : Fragment() {
 
                 }
                 PlayStatus.PAUSE -> {
-
+                    viewModel.pauseMeditation()
                 }
                 PlayStatus.END -> {
-
+                    viewModel.finishMeditation()
                 }
             }
         })
@@ -105,7 +105,7 @@ class MainFragment : Fragment() {
                 binding.apply {
                     btnPlay.visibility = View.INVISIBLE
                     btnFinish.visibility = View.INVISIBLE
-                    txtShowMenu.visibility = View.INVISIBLE
+                    txtShowMenu.visibility = View.VISIBLE
                 }
 
             }
@@ -122,6 +122,17 @@ class MainFragment : Fragment() {
             }
 
             PlayStatus.PAUSE -> {
+                binding.apply {
+                    btnPlay.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.button_play)
+                    }
+                    btnFinish.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.button_finish)
+                    }
+                    txtShowMenu.visibility = View.VISIBLE
+                }
 
             }
 
