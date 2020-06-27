@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
@@ -49,14 +50,16 @@ class MainFragment : Fragment() {
             setLifecycleOwner(activity)
         }
 
-        viewModel.initParameters()
-
         btnPlay.setOnClickListener{
             viewModel.changeStatus()
         }
 
+
+        viewModel.initParameters()
         observeViewModel()
     }
+
+
 
     @SuppressLint("FragmentLiveDataObserve")
     private fun observeViewModel() {

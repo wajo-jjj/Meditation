@@ -1,13 +1,18 @@
 package com.example.meditation.view.main
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.meditation.service.MusicService
 import com.example.meditation.R
+import com.example.meditation.service.MusicServiceHelper
 import com.example.meditation.util.FragmentTag
 import com.example.meditation.util.PlayStatus
 import com.example.meditation.view.dialog.LevelSelectDialog
@@ -15,7 +20,6 @@ import com.example.meditation.view.dialog.ThemeSelectDialog
 import com.example.meditation.view.dialog.TimeSelectDialog
 import com.example.meditation.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.properties.ReadOnlyProperty
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels { ViewModelProvider.NewInstanceFactory() }
 
+    private var musicServiceHelper: MusicServiceHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         observeViewModel()
+
 
 
 
@@ -70,7 +76,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        musicServiceHelper = MusicServiceHelper(this)
+        musicServiceHelper?.bindService()
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        musicServiceHelper?.stopBgm()
+        finish()
     }
 
     private fun observeViewModel() {
@@ -78,23 +92,32 @@ class MainActivity : AppCompatActivity() {
             when (status) {
                 PlayStatus.BEFORE_START -> {
                     btmNavi.visibility = View.VISIBLE
+
                 }
                 PlayStatus.ON_START -> {
                     btmNavi.visibility = View.INVISIBLE
+                    musicServiceHelper?.startBgm()
                 }
                 PlayStatus.RUNNING -> {
                     btmNavi.visibility = View.INVISIBLE
+                    musicServiceHelper?.startBgm()
 
                 }
                 PlayStatus.PAUSE -> {
                     btmNavi.visibility = View.INVISIBLE
+                    musicServiceHelper?.stopBgm()
 
                 }
                 PlayStatus.END -> {
+                    musicServiceHelper?.stopBgm()
+                    musicServiceHelper?.ringFinalGong()
 
                 }
             }
 
         })
+        viewModel.volume.observe(this, Observer { volume ->
+            musicServiceHelper?.setVolume(volume) })
+
     }
 }

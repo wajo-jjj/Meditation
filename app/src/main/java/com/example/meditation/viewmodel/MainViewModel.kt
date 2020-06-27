@@ -36,6 +36,8 @@ import kotlin.concurrent.schedule
 
     var playStatus = MutableLiveData<Int>()
 
+    var volume = MutableLiveData<Int>()
+
     private val userSettingsRepository = UserSettingsRepository()
     private lateinit var userSettings: UserSettings
     private val appContext: Context = MyApplication.appContext
@@ -222,6 +224,11 @@ import kotlin.concurrent.schedule
     }
 
     override fun onCleared() {
+        super.onCleared()
         cancelTimer()
+    }
+
+    fun setVolume(progress: Int) {
+        volume.value = progress
     }
 }
