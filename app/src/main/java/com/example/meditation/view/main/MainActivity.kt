@@ -1,4 +1,5 @@
 package com.example.meditation.view.main
+import android.app.ProgressDialog.show
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,12 +15,14 @@ import com.example.meditation.service.MusicService
 import com.example.meditation.R
 import com.example.meditation.service.MusicServiceHelper
 import com.example.meditation.util.FragmentTag
+import com.example.meditation.util.NotificationHelper
 import com.example.meditation.util.PlayStatus
 import com.example.meditation.view.dialog.LevelSelectDialog
 import com.example.meditation.view.dialog.ThemeSelectDialog
 import com.example.meditation.view.dialog.TimeSelectDialog
 import com.example.meditation.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,9 +31,18 @@ class MainActivity : AppCompatActivity() {
       //下のviewModelの取得の仕方でエラーが出た場合はこっちを使う。
     //private val viewModel :MainViewModel by lazy { ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java) }
 
-    private val viewModel: MainViewModel by viewModels { ViewModelProvider.NewInstanceFactory() }
+    //private val viewModel: MainViewModel by viewModels { ViewModelProvider.NewInstanceFactory() }
+      private val viewModel: MainViewModel by viewModels()
 
-    private var musicServiceHelper: MusicServiceHelper? = null
+//    private var musicServiceHelper: MusicServiceHelper? = null
+      private val musicServiceHelper: MusicServiceHelper by inject()
+//    private var notificationHelper: NotificationHelper? = null
+      private val notificationHelper: NotificationHelper by inject()
+
+      private val mainFragment: MainFragment by inject()
+      private val levelSelectDialog: LevelSelectDialog by inject()
+      private val themeSelectDialog: ThemeSelectDialog by inject()
+      private val timeSelectDialog: ThemeSelectDialog by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -41,51 +53,64 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.screen_container,
-                    MainFragment()
-                )
+                .replace(R.id.screen_container, mainFragment)
                 .commit()
         }
 
         observeViewModel()
 
-
-
+//        var notificationHelper = NotificationHelper(this)
+//            notificationHelper.startNotification()
 
 
         btmNavi.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId){
+            when (item.itemId) {
                 R.id.item_select_level -> {
-                    LevelSelectDialog().show(supportFragmentManager, FragmentTag.LEVEL_SELECT.name)
+                    levelSelectDialog.show(supportFragmentManager, FragmentTag.LEVEL_SELECT.name)
                     true
                 }
                 R.id.item_select_theme -> {
-                    ThemeSelectDialog().show(supportFragmentManager, FragmentTag.THEME_SELECT.name)
+                    themeSelectDialog.show(supportFragmentManager, FragmentTag.THEME_SELECT.name)
                     true
 
                 }
                 R.id.item_select_time -> {
-                    TimeSelectDialog().show(supportFragmentManager, FragmentTag.TIME_SELECT.name)
-
+                    timeSelectDialog.show(supportFragmentManager, FragmentTag.TIME_SELECT.name)
                     true
-
                 }
-                else -> { false
+                else -> {
+                    false
                 }
             }
         }
+        //musicServiceHelper = MusicServiceHelper(this)
+        musicServiceHelper.bindService()
 
-        musicServiceHelper = MusicServiceHelper(this)
-        musicServiceHelper?.bindService()
+        //notificationHelper = NotificationHelper(this)
+    }
 
+
+    override fun onResume() {
+        super.onResume()
+        notificationHelper.cancelNotification()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        notificationHelper.startNotification()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notificationHelper.cancelNotification()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        musicServiceHelper?.stopBgm()
+        musicServiceHelper.stopBgm()
         finish()
     }
+
 
     private fun observeViewModel() {
         viewModel.playStatus.observe(this, Observer { status ->
@@ -96,28 +121,28 @@ class MainActivity : AppCompatActivity() {
                 }
                 PlayStatus.ON_START -> {
                     btmNavi.visibility = View.INVISIBLE
-                    musicServiceHelper?.startBgm()
+                    musicServiceHelper.startBgm()
                 }
                 PlayStatus.RUNNING -> {
                     btmNavi.visibility = View.INVISIBLE
-                    musicServiceHelper?.startBgm()
+                    musicServiceHelper.startBgm()
 
                 }
                 PlayStatus.PAUSE -> {
                     btmNavi.visibility = View.INVISIBLE
-                    musicServiceHelper?.stopBgm()
+                    musicServiceHelper.stopBgm()
 
                 }
                 PlayStatus.END -> {
-                    musicServiceHelper?.stopBgm()
-                    musicServiceHelper?.ringFinalGong()
+                    musicServiceHelper.stopBgm()
+                    musicServiceHelper.ringFinalGong()
 
                 }
             }
 
         })
         viewModel.volume.observe(this, Observer { volume ->
-            musicServiceHelper?.setVolume(volume) })
+            musicServiceHelper.setVolume(volume) })
 
     }
 }

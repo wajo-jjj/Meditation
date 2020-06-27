@@ -20,11 +20,14 @@ import com.example.meditation.R
 import com.example.meditation.databinding.FragmentMainBinding
 import com.example.meditation.util.PlayStatus
 import kotlinx.android.synthetic.main.fragment_main.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+
+    //private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by sharedViewModel()
     private lateinit var  binding: FragmentMainBinding
 
 

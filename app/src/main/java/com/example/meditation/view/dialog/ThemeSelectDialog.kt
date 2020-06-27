@@ -13,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meditation.MyApplication
 import com.example.meditation.R
 import com.example.meditation.viewmodel.MainViewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class ThemeSelectDialog: DialogFragment() {
 
 
     val appContext = MyApplication.appContext
     private val themeList = MyApplication.themeList
-
-    private val viewModel: MainViewModel by activityViewModels()
+    //private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by sharedViewModel()
 
 
     @SuppressLint("UseRequireInsteadOfGet")

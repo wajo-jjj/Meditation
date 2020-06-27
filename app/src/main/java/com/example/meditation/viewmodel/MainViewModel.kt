@@ -1,5 +1,6 @@
 package com.example.meditation.viewmodel
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
